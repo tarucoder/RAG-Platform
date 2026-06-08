@@ -8,13 +8,43 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.RAG.retriever import Retriever
 from src.RAG.prompt_engine import PromptEngine
 from src.RAG.generator import Generator
+from src.data.vector_store import VectorStore
 
 class TestRAGPipeline(unittest.TestCase):
     """Unit tests for RAG Pipeline components (Retriever, PromptEngine, Generator)."""
     
     def setUp(self):
+        # Create a test-specific temporary DB folder to isolate tests
+        self.test_dir = Path(__file__).resolve().parent.parent / "data" / "test_rag_pipeline_db"
+        self.test_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Instantiate isolated test VectorStore
+        self.test_store = VectorStore(persist_dir=str(self.test_dir))
+        
+        # Insert mock document for retriever test
+        url = "https://groww.in/mutual-funds/groww-large-cap-fund-direct-growth"
+        self.test_store.add_document_chunks(
+            url=url,
+            scheme_name="Groww Large Cap Fund Direct Growth",
+            title="Groww Large Cap Fund - NAV, Performance",
+            chunks=["Groww Large Cap Fund has an exit load of 1.00% if redeemed within 1 year."]
+        )
+        
+        # Override singleton instance to point to our isolated test store
+        self.original_instance = VectorStore._instance
+        VectorStore._instance = self.test_store
+        
         self.retriever = Retriever()
         self.generator = Generator()
+        
+    def tearDown(self):
+        # Restore original singleton
+        VectorStore._instance = self.original_instance
+        
+        # Clean up isolated DB folder
+        import shutil
+        if self.test_dir.exists():
+            shutil.rmtree(self.test_dir, ignore_errors=True)
         
     def test_retriever_in_domain(self):
         """Verify that relevant mutual fund queries retrieve chunks above the similarity threshold."""
