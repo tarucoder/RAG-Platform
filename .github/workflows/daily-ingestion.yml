@@ -15,6 +15,17 @@ jobs:
     name: Run Ingestion & Re-Index
     runs-on: ubuntu-latest
 
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      API_HOST: 127.0.0.1
+      API_PORT: 8000
+      DEBUG: "True"
+      LLM_PROVIDER: groq
+      GROQ_MODEL: llama-3.3-70b-versatile
+      EMBEDDING_MODEL: all-MiniLM-L6-v2
+      SIMILARITY_THRESHOLD: 0.15
+      TOP_K_CONTEXT: 3
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -35,16 +46,6 @@ jobs:
           python -m unittest discover tests
 
       - name: Run Scheduler Ingestion (One-Off)
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          API_HOST: 127.0.0.1
-          API_PORT: 8000
-          DEBUG: "True"
-          LLM_PROVIDER: groq
-          GROQ_MODEL: llama-3.3-70b-versatile
-          EMBEDDING_MODEL: all-MiniLM-L6-v2
-          SIMILARITY_THRESHOLD: 0.15
-          TOP_K_CONTEXT: 3
         run: |
           python -m src.data.scheduler --run-once
 
