@@ -141,10 +141,14 @@ class VectorStore:
         
         # Check for Python 3.14+ on Windows where PyTorch & ChromaDB C++ extensions fail to load/initialize
         # Or if explicitly requested via environment variable
-        if (platform.system() == "Windows" and sys.version_info >= (3, 14)) or os.getenv("FORCE_FALLBACK", "False").lower() in ("true", "1", "yes"):
+        # Or if local_db.json database file is present (indicating fallback storage is the active DB format)
+        local_db_file = Path(self.persist_dir) / "local_db.json"
+        if (platform.system() == "Windows" and sys.version_info >= (3, 14)) or \
+           os.getenv("FORCE_FALLBACK", "False").lower() in ("true", "1", "yes") or \
+           local_db_file.exists():
             logger.warning(
-                "Fallback storage (LocalVectorDB + HashingVectorizer) requested or Windows with Python 3.14+ detected. "
-                "Bypassing SentenceTransformer and ChromaDB."
+                "Fallback storage (LocalVectorDB + HashingVectorizer) enabled because "
+                "either FORCE_FALLBACK is True, Python 3.14+ Windows is detected, or local_db.json exists."
             )
             self.use_fallback = True
         
