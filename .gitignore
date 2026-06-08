@@ -1,0 +1,27 @@
+# Python virtual environment
+venv/
+
+# Environment configurations
+.env
+
+# Raw and processed datasets/databases
+data/raw/
+data/processed/
+data/vector_db/
+data/temp_stitch/
+data/test_chroma_init/
+data/test_vector_db/
+
+# Application execution logs
+logs/
+
+# Python compiled binaries & caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Scratch/extracted tools
+stitch_extracted/
+stitch_premium_zip

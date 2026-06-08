@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Groww FAQ Assistant</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1a1635, #141025);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(20, 16, 37, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom Scrollbar */
+        #chat-scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        #chat-scroll-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #chat-scroll-area::-webkit-scrollbar-thumb {
+            background: rgba(144, 143, 160, 0.3);
+            border-radius: 10px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .active-scale:active {
+            transform: scale(0.95);
+        }
+
+        /* Ambient Glow animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Custom fadeInUp transition */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Custom fadeIn transition */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#e6defc",
+                        "inverse-primary": "#494bd6",
+                        "surface-tint": "#c0c1ff",
+                        "surface-variant": "#363249",
+                        "outline": "#908fa0",
+                        "on-primary": "#1000a9",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary": "#68000a",
+                        "on-tertiary-fixed": "#410004",
+                        "primary-fixed": "#e1e0ff",
+                        "primary": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "secondary-container": "#00a572",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#00311f",
+                        "on-background": "#e6defc",
+                        "background": "#141025",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#8083ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "tertiary-container": "#ff5451",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "tertiary": "#ffb3ad",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#07006c",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-error": "#690005",
+                        "surface-container-high": "#2b273d",
+                        "surface": "#141025",
+                        "surface-container-low": "#1d192e",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-on-surface": "#322d44",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "surface-bright": "#3b364d",
+                        "surface-container": "#211d32",
+                        "inverse-surface": "#e6defc",
+                        "surface-container-lowest": "#0f0b20",
+                        "surface-dim": "#141025",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-tertiary-container": "#5c0008",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "secondary": "#4edea3",
+                        "on-secondary": "#003824",
+                        "on-primary-container": "#0d0096",
+                        "surface-container-highest": "#363249"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "container-padding-mobile": "16px",
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "gutter": "24px",
+                        "container-padding-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "300"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex items-center justify-center p-4">
+    <!-- Top Navigation Shell -->
+    <header class="fixed top-0 w-full z-50 flex flex-col items-center justify-center py-stack-sm px-container-padding-mobile md:px-container-padding-desktop bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/40">
+        <div class="max-w-[850px] w-full flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-headline-md" data-icon="account_balance_wallet">account_balance_wallet</span>
+                <h1 class="font-headline-md text-headline-md font-bold text-on-surface">Groww FAQ Assistant</h1>
+            </div>
+            <div class="flex gap-4 items-center">
+                <span class="material-symbols-outlined text-on-surface-variant hover:bg-white/5 transition-colors p-2 rounded-full cursor-pointer" data-icon="security">security</span>
+                <span class="material-symbols-outlined text-on-surface-variant hover:bg-white/5 transition-colors p-2 rounded-full cursor-pointer" data-icon="help_outline">help_outline</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-[850px] w-full h-[calc(100vh-80px)] mt-16 flex flex-col relative">
+        <!-- Floating Banner -->
+        <div class="flex justify-center mb-stack-md flex-shrink-0">
+            <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                <span class="material-symbols-outlined text-secondary text-[16px]" data-icon="verified">verified</span>
+                <span class="font-label-md text-label-md text-on-surface-variant tracking-wider uppercase">Facts-only. No investment advice.</span>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="flex-grow glass-panel rounded-xl mb-4 overflow-y-auto p-6 relative space-y-6 scroll-smooth shadow-2xl" id="chat-scroll-area">
+            <!-- Welcome System Card -->
+            <div class="border-2 border-dashed border-outline-variant bg-white/5 rounded-xl p-6 text-center mx-auto max-w-lg mb-6">
+                <div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-on-primary-container" data-icon="auto_awesome">auto_awesome</span>
+                </div>
+                <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Compliance Standards</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-4">Your official link to scheme-related information.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-left">
+                    <div class="p-3 bg-surface-container rounded-lg border border-white/5">
+                        <span class="material-symbols-outlined text-primary text-[20px] mb-1" data-icon="fact_check">fact_check</span>
+                        <p class="font-label-md text-label-md text-on-surface font-bold">Facts only</p>
+                    </div>
+                    <div class="p-3 bg-surface-container rounded-lg border border-white/5">
+                        <span class="material-symbols-outlined text-error text-[20px] mb-1" data-icon="block">block</span>
+                        <p class="font-label-md text-label-md text-on-surface font-bold">No advice</p>
+                    </div>
+                    <div class="p-3 bg-surface-container rounded-lg border border-white/5">
+                        <span class="material-symbols-outlined text-secondary text-[20px] mb-1" data-icon="shield">shield</span>
+                        <p class="font-label-md text-label-md text-on-surface font-bold">PII safety</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Initial Assistant Bubble -->
+            <div class="flex flex-col items-start max-w-[85%] mb-6 animate-fade-in-up">
+                <div class="bg-surface-container-highest backdrop-blur-md border border-white/10 rounded-2xl rounded-tl-none px-6 py-4 shadow-xl">
+                    <p class="font-body-md text-body-md text-on-surface">Hello! I am your Groww Mutual Fund Assistant. I can provide factual information about exit loads, AUM, and fund managers directly from official scheme documents. How can I help you today?</p>
+                </div>
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="font-label-md text-label-md text-on-surface-variant bg-surface-variant/50 px-2 py-1 rounded">Updated: 01 Jun '26</span>
+                    <a class="font-label-md text-label-md text-primary flex items-center gap-1 hover:underline" href="https://www.sebi.gov.in" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="link">link</span> Official Document
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide flex-shrink-0" id="suggestion-chips-container">
+            <button class="suggestion-chip flex-shrink-0 bg-surface-container-high hover:bg-primary-container/20 border border-white/10 px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all duration-300 active-scale shadow-md">
+                what is exit load of Groww Large Cap?
+            </button>
+            <button class="suggestion-chip flex-shrink-0 bg-surface-container-high hover:bg-primary-container/20 border border-white/10 px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all duration-300 active-scale shadow-md">
+                what is the AUM of Groww Small Cap?
+            </button>
+            <button class="suggestion-chip flex-shrink-0 bg-surface-container-high hover:bg-primary-container/20 border border-white/10 px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all duration-300 active-scale shadow-md">
+                who is the fund manager of Parag Parikh Long Term Value Fund?
+            </button>
+            <button class="suggestion-chip flex-shrink-0 bg-surface-container-high hover:bg-primary-container/20 border border-white/10 px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all duration-300 active-scale shadow-md">
+                what is the expense ratio of SBI Contra?
+            </button>
+        </div>
+
+        <!-- Chat Input Area -->
+        <form class="relative flex-shrink-0 mb-2" id="chat-form">
+            <div class="glass-panel rounded-full p-2 pl-6 flex items-center gap-2 shadow-2xl focus-within:ring-2 focus-within:ring-primary/50 transition-all" id="input-wrapper">
+                <input class="bg-transparent border-none focus:ring-0 flex-grow font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/40" id="chat-input" placeholder="Ask about fund charges, managers, or documents..." type="text" required autocomplete="off"/>
+                <button type="submit" class="bg-primary hover:brightness-110 text-on-primary rounded-full p-4 flex items-center justify-center transition-all duration-150 active-scale group">
+                    <span class="material-symbols-outlined font-bold group-hover:rotate-12 transition-transform" data-icon="send">send</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Legal Footer -->
+        <footer class="mb-4 text-center px-container-padding-mobile flex-shrink-0">
+            <p class="font-label-md text-label-md text-on-surface-variant opacity-60 leading-relaxed">
+                Groww Compliant Financial Assistant. All responses are derived strictly from scheme documents. <br class="hidden md:block"/>
+                For official guidelines, check <a href="https://www.sebi.gov.in" target="_blank" rel="noopener" class="underline hover:text-primary">SEBI</a>. All investments are subject to market risks.
+            </p>
+        </footer>
+    </main>
+
+    <!-- Interactive BG Elements -->
+    <div class="fixed top-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/10 blur-[120px] rounded-full -z-10 pointer-events-none float-animation"></div>
+    <div class="fixed bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary/5 blur-[120px] rounded-full -z-10 pointer-events-none float-animation" style="animation-delay: -3s"></div>
+
+    <script>
+        // Micro-interaction for input bar glow
+        const chatInput = document.getElementById('chat-input');
+        const inputWrapper = document.getElementById('input-wrapper');
+
+        chatInput.addEventListener('focus', () => {
+            inputWrapper.classList.add('shadow-[0_0_20px_rgba(192,193,255,0.2)]');
+        });
+
+        chatInput.addEventListener('blur', () => {
+            inputWrapper.classList.remove('shadow-[0_0_20px_rgba(192,193,255,0.2)]');
+        });
+
+        // Background Particle System
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.createElement('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.init();
+            }
+            init() {
+                this.canvas.style.position = 'fixed';
+                this.canvas.style.top = '0';
+                this.canvas.style.left = '0';
+                this.canvas.style.width = '100vw';
+                this.canvas.style.height = '100vh';
+                this.canvas.style.pointerEvents = 'none';
+                this.canvas.style.zIndex = '-1';
+                document.body.appendChild(this.canvas);
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                for(let i = 0; i < 30; i++) this.particles.push(new Particle(this.canvas.width, this.canvas.height));
+                this.animate();
+            }
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(p => {
+                    p.update();
+                    p.draw(this.ctx);
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        class Particle {
+            constructor(w, h) {
+                this.w = w; this.h = h;
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * this.w;
+                this.y = Math.random() * this.h;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.3;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.x < 0 || this.x > this.w || this.y < 0 || this.y > this.h) this.reset();
+            }
+            draw(ctx) {
+                ctx.fillStyle = `rgba(192, 193, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        new ParticleSystem();
+
+        // Chat Controller Logic
+        (function() {
+            const chatScrollArea = document.getElementById('chat-scroll-area');
+            const suggestionChipsContainer = document.getElementById('suggestion-chips-container');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const suggestionChips = document.querySelectorAll('.suggestion-chip');
+
+            function scrollToBottom() {
+                chatScrollArea.scrollTop = chatScrollArea.scrollHeight;
+            }
+
+            function formatMessageText(text) {
+                let html = text;
+                
+                // Escape HTML to prevent XSS (basic)
+                html = html
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+
+                // Convert Markdown links: [title](url)
+                html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, label, url) => {
+                    return `<a href="${url}" target="_blank" rel="noopener" class="text-primary hover:underline font-semibold inline-flex items-center gap-0.5">${label} <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>`;
+                });
+
+                // Convert Bold text: **text**
+                html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+                // Convert newlines to HTML breaks
+                html = html.replace(/\n/g, "<br>");
+
+                return html;
+            }
+
+            function createMessage(content, type, metadata = {}) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex w-full mb-6 ${type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`;
+                
+                let bubbleClass = '';
+                if (type === 'user') {
+                    bubbleClass = 'bg-primary-container text-on-primary-container border border-white/10 rounded-2xl rounded-tr-none px-6 py-4 max-w-[80%] backdrop-blur-md shadow-xl';
+                    wrapper.innerHTML = `
+                        <div class="${bubbleClass}">
+                            <p class="font-body-md text-body-md">${formatMessageText(content)}</p>
+                        </div>
+                    `;
+                } else if (type === 'assistant') {
+                    bubbleClass = 'bg-surface-container-highest backdrop-blur-md border border-white/10 rounded-2xl rounded-tl-none px-6 py-4 max-w-[85%] shadow-xl';
+                    
+                    let metadataHtml = '';
+                    if (metadata.source) {
+                        metadataHtml = `
+                            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-medium opacity-60">
+                                <span class="bg-white/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Updated: ${metadata.last_updated || '01 Jun \'26'}</span>
+                                <a href="${metadata.source}" target="_blank" rel="noopener" class="flex items-center gap-1 hover:text-primary transition-colors">
+                                    Official Document <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                                </a>
+                            </div>
+                        `;
+                    }
+                    wrapper.innerHTML = `
+                        <div>
+                            <div class="${bubbleClass}">
+                                <div class="font-body-md text-body-md text-on-surface leading-relaxed">${formatMessageText(content)}</div>
+                            </div>
+                            ${metadataHtml}
+                        </div>
+                    `;
+                } else if (type === 'security') {
+                    bubbleClass = 'bg-error-container/40 backdrop-blur-md border border-error/30 rounded-2xl rounded-tl-none p-4 max-w-[85%] shadow-xl flex gap-3';
+                    wrapper.innerHTML = `
+                        <div class="${bubbleClass}">
+                            <span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+                            <div>
+                                <p class="font-label-md text-label-md text-error font-bold uppercase mb-1">System Restriction / Alert</p>
+                                <p class="font-body-sm text-body-sm text-on-error-container leading-relaxed">${formatMessageText(content)}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                chatScrollArea.appendChild(wrapper);
+                scrollToBottom();
+            }
+
+            // Typing Indicator
+            function showTyping() {
+                const typingId = 'typing-' + Date.now();
+                const wrapper = document.createElement('div');
+                wrapper.id = typingId;
+                wrapper.className = 'flex w-full mb-6 justify-start animate-fade-in';
+                wrapper.innerHTML = `
+                    <div class="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none px-6 py-4 backdrop-blur-md shadow-xl">
+                        <div class="flex gap-1.5 items-center h-6">
+                            <div class="w-1.5 h-1.5 bg-on-surface-variant/40 rounded-full animate-bounce"></div>
+                            <div class="w-1.5 h-1.5 bg-on-surface-variant/40 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                            <div class="w-1.5 h-1.5 bg-on-surface-variant/40 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                        </div>
+                    </div>
+                `;
+                chatScrollArea.appendChild(wrapper);
+                scrollToBottom();
+                return typingId;
+            }
+
+            function removeTyping(id) {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            }
+
+            async function handleQuery(query) {
+                if (!query.trim()) return;
+                
+                // Hide chips on first query
+                if (suggestionChipsContainer) {
+                    suggestionChipsContainer.style.display = 'none';
+                }
+
+                createMessage(query, 'user');
+                chatInput.value = '';
+                
+                const typingId = showTyping();
+
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question: query })
+                    });
+
+                    const data = await response.json();
+                    removeTyping(typingId);
+
+                    if (response.status === 400 && data.detail && data.detail.toLowerCase().includes('security')) {
+                        createMessage(data.detail, 'security');
+                    } else if (response.ok) {
+                        createMessage(data.answer, 'assistant', {
+                            source: data.source,
+                            last_updated: data.last_updated
+                        });
+                    } else {
+                        const errMsg = data.detail || 'An unexpected error occurred. Please try again later.';
+                        createMessage(errMsg, 'security');
+                    }
+                } catch (error) {
+                    removeTyping(typingId);
+                    createMessage('Network error. Check your connection.', 'security');
+                }
+            }
+
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleQuery(chatInput.value);
+            });
+
+            suggestionChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    handleQuery(chip.innerText.trim());
+                });
+            });
+
+            // Init scroll
+            scrollToBottom();
+        })();
+    </script>
+</body>
+</html>
