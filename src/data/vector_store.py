@@ -136,14 +136,15 @@ class VectorStore:
         # Ensure persistent database directory exists
         Path(self.persist_dir).mkdir(parents=True, exist_ok=True)
         
+        import os
         self.use_fallback = False
         
         # Check for Python 3.14+ on Windows where PyTorch & ChromaDB C++ extensions fail to load/initialize
-        if platform.system() == "Windows" and sys.version_info >= (3, 14):
+        # Or if explicitly requested via environment variable
+        if (platform.system() == "Windows" and sys.version_info >= (3, 14)) or os.getenv("FORCE_FALLBACK", "False").lower() in ("true", "1", "yes"):
             logger.warning(
-                "Windows with Python 3.14+ detected. Bypassing SentenceTransformer and ChromaDB "
-                "to prevent DLL initialization crash. Gracefully falling back to scikit-learn HashingVectorizer "
-                "and pure-Python LocalVectorDB storage."
+                "Fallback storage (LocalVectorDB + HashingVectorizer) requested or Windows with Python 3.14+ detected. "
+                "Bypassing SentenceTransformer and ChromaDB."
             )
             self.use_fallback = True
         

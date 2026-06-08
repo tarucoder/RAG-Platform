@@ -27,6 +27,7 @@ jobs:
       EMBEDDING_MODEL: all-MiniLM-L6-v2
       SIMILARITY_THRESHOLD: 0.30
       TOP_K_CONTEXT: 3
+      FORCE_FALLBACK: "True"
 
     steps:
       - name: Checkout Repository
@@ -67,11 +68,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Force add modified directories that are ignored by default in .gitignore
-          git add -f data/processed/checksums.json
-          git add -f data/vector_db/local_db.json
-          git add -f data/processed/
-          git add -f data/raw/
+          # Force add modified directories/files that are ignored by default in .gitignore if they exist
+          [ -f data/processed/checksums.json ] && git add -f data/processed/checksums.json || true
+          [ -f data/vector_db/local_db.json ] && git add -f data/vector_db/local_db.json || true
+          [ -d data/processed ] && git add -f data/processed/ || true
+          [ -d data/raw ] && git add -f data/raw/ || true
           
           # Check if there are actual changes staged to commit
           if git diff --cached --quiet; then

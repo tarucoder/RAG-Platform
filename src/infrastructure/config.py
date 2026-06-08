@@ -26,7 +26,18 @@ class Config:
     
     # LLM Configurations
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "groq")
-    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+    
+    # Load from environment variable, falling back to Streamlit secrets if available
+    _groq_key = os.getenv("GROQ_API_KEY", "")
+    if not _groq_key:
+        try:
+            import streamlit as st
+            if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
+                _groq_key = st.secrets["GROQ_API_KEY"]
+        except Exception:
+            pass
+    GROQ_API_KEY: str = _groq_key
+    
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
     
     # RAG Configurations
