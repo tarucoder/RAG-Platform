@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -65,5 +67,5 @@ jobs:
             echo "No updates or modified fund data detected. Skipping commit."
           else
             git commit -m "Automated Ingestion Update: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-            git push origin main
+            git push origin HEAD:main
           fi
