@@ -15,9 +15,16 @@ class TestVectorStore(unittest.TestCase):
         # Create a test-specific temporary DB folder inside the workspace data directory
         self.test_db_dir = Path(__file__).resolve().parent.parent / "data" / "test_vector_db"
         self.test_db_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Isolate singleton during test execution
+        self.original_instance = VectorStore._instance
         self.store = VectorStore(persist_dir=str(self.test_db_dir))
+        VectorStore._instance = self.store
         
     def tearDown(self):
+        # Restore original singleton
+        VectorStore._instance = self.original_instance
+        
         # Remove Chroma test folder files and directory
         if self.test_db_dir.exists():
             shutil.rmtree(self.test_db_dir, ignore_errors=True)

@@ -36,6 +36,10 @@ class TestSchedulerAndChecksums(unittest.TestCase):
         Config.PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
         Config.VECTOR_DB_DIR.mkdir(parents=True, exist_ok=True)
 
+        # Reset VectorStore singleton to force initialization with patched test dir
+        self.original_instance = VectorStore._instance
+        VectorStore._instance = None
+
         # Mock the list of mutual fund URLs to be short for tests
         self.urls_patch = patch("src.data.crawler.MUTUAL_FUND_URLS", [
             "https://groww.in/mutual-funds/groww-large-cap-fund-direct-growth",
@@ -48,6 +52,9 @@ class TestSchedulerAndChecksums(unittest.TestCase):
         self.sleep_patch.start()
 
     def tearDown(self):
+        # Restore original singleton
+        VectorStore._instance = self.original_instance
+        
         self.raw_patch.stop()
         self.processed_patch.stop()
         self.vector_patch.stop()

@@ -5,11 +5,37 @@ from pathlib import Path
 # Add project root to import path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
+from src.data.vector_store import VectorStore
+
+# Create a test-specific temporary DB folder to isolate tests
+test_db_dir = Path(__file__).resolve().parent.parent / "data" / "test_api_db"
+test_db_dir.mkdir(parents=True, exist_ok=True)
+
+# Initialize and set the global singleton instance before importing api/app
+test_store = VectorStore(persist_dir=str(test_db_dir))
+
+# Seed it with a mock document so the database is populated for retriever queries
+url = "https://groww.in/mutual-funds/groww-large-cap-fund-direct-growth"
+test_store.add_document_chunks(
+    url=url,
+    scheme_name="Groww Large Cap Fund Direct Growth",
+    title="Groww Large Cap Fund - NAV, Performance",
+    chunks=["Groww Large Cap Fund has an exit load of 1.00% if redeemed within 1 year."]
+)
+
+VectorStore._instance = test_store
+
 from fastapi.testclient import TestClient
 from src.presentation.api import app
 
 class TestAPIGateway(unittest.TestCase):
     """Integration tests for the REST API Gateway (health checks, queries, PII filters)."""
+    
+    @classmethod
+    def tearDownClass(cls):
+        import shutil
+        if test_db_dir.exists():
+            shutil.rmtree(test_db_dir, ignore_errors=True)
     
     def setUp(self):
         self.client = TestClient(app)
