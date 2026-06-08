@@ -45,7 +45,16 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          python -m unittest discover -v tests
+          python -m unittest discover -v tests > test_output.log 2>&1
+
+      - name: Upload Test Logs on Failure
+        if: failure()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f test_output.log
+          git commit -m "Capture CI Test Failures Log"
+          git push origin HEAD:main
 
       - name: Run Scheduler Ingestion (One-Off)
         run: |
