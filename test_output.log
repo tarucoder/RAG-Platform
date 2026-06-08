@@ -1,0 +1,245 @@
+[2026-06-08 18:49:10] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_api_db
+[2026-06-08 18:49:10] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3584.35it/s]
+[2026-06-08 18:49:20] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+[2026-06-08 18:49:20] [INFO] [app] [vector_store.py:253] - Purged old index for: https://groww.in/mutual-funds/groww-large-cap-fund-direct-growth
+[2026-06-08 18:49:20] [INFO] [app] [vector_store.py:281] - Successfully indexed 1 chunks for Groww Large Cap Fund Direct Growth
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+[2026-06-08 18:49:20] [INFO] [app] [retriever.py:12] - Initialized Retriever with similarity_threshold=0.3 and top_k=3.
+[2026-06-08 18:49:20] [WARNING] [app] [generator.py:17] - GROQ_API_KEY is not configured in environment/.env. The pipeline will gracefully operate in offline local Mock Mode.
+test_chat_empty_query (test_api.TestAPIGateway)
+Verify that empty questions are rejected with HTTP 400. ... ok
+test_chat_valid_query (test_api.TestAPIGateway)
+Verify that a valid mutual fund query returns RAG response fields. ... [2026-06-08 18:49:20] [INFO] [app] [retriever.py:27] - Retrieving top 3 contexts for query: 'what is exit load of Groww Large Cap?'
+[2026-06-08 18:49:20] [INFO] [app] [retriever.py:45] - Retrieved 1 of 1 chunks above similarity threshold.
+[2026-06-08 18:49:20] [INFO] [app] [generator.py:155] - Generating response in local Mock Mode...
+ok
+test_health_endpoint (test_api.TestAPIGateway)
+Verify that GET /api/health returns a healthy status code and payload. ... ok
+test_pii_blocking_aadhaar (test_api.TestAPIGateway)
+Verify that queries containing Aadhaar number patterns are blocked with HTTP 400. ... [2026-06-08 18:49:20] [WARNING] [app] [api.py:83] - PII block triggered for query: 'what is exit load? M...'
+ok
+test_pii_blocking_email (test_api.TestAPIGateway)
+Verify that queries containing email addresses are blocked with HTTP 400. ... [2026-06-08 18:49:20] [WARNING] [app] [api.py:83] - PII block triggered for query: 'send aum to test@exa...'
+ok
+test_pii_blocking_pan (test_api.TestAPIGateway)
+Verify that queries containing PAN card patterns are blocked with HTTP 400. ... [2026-06-08 18:49:20] [WARNING] [app] [api.py:83] - PII block triggered for query: 'who is manager of Gr...'
+ok
+test_pii_blocking_phone (test_api.TestAPIGateway)
+Verify that queries containing mobile phone numbers are blocked with HTTP 400. ... [2026-06-08 18:49:20] [WARNING] [app] [api.py:83] - PII block triggered for query: 'exit load of small c...'
+ok
+test_markdown_table_conversion (test_data_layer.TestDataLayer)
+Verify that HTML table tag blocks are successfully mapped to clean Markdown grids. ... ok
+test_recursive_splitter_overlap (test_data_layer.TestDataLayer)
+Verify that character-split overlays are constructed correctly across chunks. ... ok
+test_table_preservation_chunking (test_data_layer.TestDataLayer)
+Verify that chunking algorithms treat markdown tables as single, atomic, unsplit blocks. ... ok
+test_compliance_validator_citation_link (test_rag_pipeline.TestRAGPipeline)
+Verify that citation link is correctly verified or appended if missing. ... [2026-06-08 18:49:20] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:20] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3446.63it/s]
+[2026-06-08 18:49:22] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+[2026-06-08 18:49:22] [INFO] [app] [vector_store.py:253] - Purged old index for: https://groww.in/mutual-funds/groww-large-cap-fund-direct-growth
+[2026-06-08 18:49:22] [INFO] [app] [vector_store.py:281] - Successfully indexed 1 chunks for Groww Large Cap Fund Direct Growth
+[2026-06-08 18:49:22] [INFO] [app] [retriever.py:12] - Initialized Retriever with similarity_threshold=0.3 and top_k=3.
+[2026-06-08 18:49:22] [INFO] [app] [retriever.py:12] - Initialized Retriever with similarity_threshold=0.3 and top_k=3.
+[2026-06-08 18:49:22] [WARNING] [app] [generator.py:17] - GROQ_API_KEY is not configured in environment/.env. The pipeline will gracefully operate in offline local Mock Mode.
+[2026-06-08 18:49:22] [WARNING] [app] [generator.py:113] - Response did not contain a citation link. Appending one.
+ok
+test_compliance_validator_multiple_links (test_rag_pipeline.TestRAGPipeline)
+Verify that only the first markdown link is kept, and others are demoted to plain text. ... [2026-06-08 18:49:22] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:22] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3394.11it/s]
+[2026-06-08 18:49:24] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_compliance_validator_sentence_truncation (test_rag_pipeline.TestRAGPipeline)
+Verify response is truncated to at most 3 sentences if LLM output is too long. ... [2026-06-08 18:49:24] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:24] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3443.83it/s]
+[2026-06-08 18:49:26] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_out_of_domain_generator_refusal (test_rag_pipeline.TestRAGPipeline)
+Verify generator returns standard refusal for out-of-domain queries. ... [2026-06-08 18:49:26] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:26] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3403.86it/s]
+[2026-06-08 18:49:27] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_prompt_construction (test_rag_pipeline.TestRAGPipeline)
+Verify prompt builder formats system instructions and chunks correctly. ... [2026-06-08 18:49:27] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:27] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3517.20it/s]
+[2026-06-08 18:49:29] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_retriever_in_domain (test_rag_pipeline.TestRAGPipeline)
+Verify that relevant mutual fund queries retrieve chunks above the similarity threshold. ... [2026-06-08 18:49:29] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:29] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3210.03it/s]
+[2026-06-08 18:49:31] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_retriever_out_of_domain (test_rag_pipeline.TestRAGPipeline)
+Verify that unrelated/noisy queries are completely filtered out by the similarity threshold. ... [2026-06-08 18:49:31] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_rag_pipeline_db
+[2026-06-08 18:49:31] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3378.78it/s]
+[2026-06-08 18:49:32] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+ERROR
+test_checksum_generation_and_detection (test_scheduler.TestSchedulerAndChecksums)
+Verify that Crawler detects content changes and skips unchanged HTML files. ... [2026-06-08 18:49:33] [INFO] [app] [crawler.py:112] - Initiating mutual fund crawl. Target URLs: 2
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-large-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-small-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:162] - Crawling completed successfully.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:112] - Initiating mutual fund crawl. Target URLs: 2
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:138] - Content unmodified for groww-large-cap-fund-direct-growth.html, skipping disk write.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:138] - Content unmodified for groww-small-cap-fund-direct-growth.html, skipping disk write.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:162] - Crawling completed successfully.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:112] - Initiating mutual fund crawl. Target URLs: 2
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-large-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:138] - Content unmodified for groww-small-cap-fund-direct-growth.html, skipping disk write.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:162] - Crawling completed successfully.
+ok
+test_run_ingestion_returns_only_modified (test_scheduler.TestSchedulerAndChecksums)
+Verify run_ingestion only parses and returns modified files. ... [2026-06-08 18:49:33] [INFO] [app] [ingest_runner.py:16] - Starting ingestion runner...
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:112] - Initiating mutual fund crawl. Target URLs: 2
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-large-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-small-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:162] - Crawling completed successfully.
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:132] - Parsing raw file: groww-large-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:160] - Successfully processed and chunked scheme. Output chunks: 1
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:132] - Parsing raw file: groww-small-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:160] - Successfully processed and chunked scheme. Output chunks: 1
+[2026-06-08 18:49:33] [INFO] [app] [ingest_runner.py:34] - Ingestion pipeline run finished. Scraped and parsed: 2 schemes.
+[2026-06-08 18:49:33] [INFO] [app] [ingest_runner.py:16] - Starting ingestion runner...
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:112] - Initiating mutual fund crawl. Target URLs: 2
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:138] - Content unmodified for groww-large-cap-fund-direct-growth.html, skipping disk write.
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:145] - Successfully cached/updated raw file: groww-small-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [crawler.py:162] - Crawling completed successfully.
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:132] - Parsing raw file: groww-small-cap-fund-direct-growth.html
+[2026-06-08 18:49:33] [INFO] [app] [parser.py:160] - Successfully processed and chunked scheme. Output chunks: 1
+[2026-06-08 18:49:33] [INFO] [app] [ingest_runner.py:34] - Ingestion pipeline run finished. Scraped and parsed: 1 schemes.
+ok
+test_indexing_and_retrieval (test_vector_store.TestVectorStore)
+Test adding document chunks to the collection and retrieving them via similarity search. ... [2026-06-08 18:49:33] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_vector_db
+[2026-06-08 18:49:33] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3469.21it/s]
+[2026-06-08 18:49:34] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+[2026-06-08 18:49:34] [INFO] [app] [vector_store.py:253] - Purged old index for: https://groww.in/mutual-funds/test-scheme-direct-growth
+[2026-06-08 18:49:34] [INFO] [app] [vector_store.py:281] - Successfully indexed 3 chunks for Test Scheme Direct Growth
+ok
+test_purging_on_reindex (test_vector_store.TestVectorStore)
+Test that re-indexing a URL purges old chunks to prevent duplicates/orphans. ... [2026-06-08 18:49:34] [INFO] [app] [vector_store.py:159] - Initializing persistent ChromaDB client at: /home/runner/work/RAG-Platform/RAG-Platform/data/test_vector_db
+[2026-06-08 18:49:34] [INFO] [app] [vector_store.py:162] - Attempting to load sentence-transformer embedding model BAAI/bge-small-en-v1.5...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3510.38it/s]
+[2026-06-08 18:49:36] [INFO] [app] [vector_store.py:166] - Successfully loaded sentence-transformer BGE model.
+[2026-06-08 18:49:36] [INFO] [app] [vector_store.py:253] - Purged old index for: https://groww.in/mutual-funds/purge-scheme
+ERROR
+
+======================================================================
+ERROR: test_compliance_validator_multiple_links (test_rag_pipeline.TestRAGPipeline)
+Verify that only the first markdown link is kept, and others are demoted to plain text.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_compliance_validator_sentence_truncation (test_rag_pipeline.TestRAGPipeline)
+Verify response is truncated to at most 3 sentences if LLM output is too long.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_out_of_domain_generator_refusal (test_rag_pipeline.TestRAGPipeline)
+Verify generator returns standard refusal for out-of-domain queries.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_prompt_construction (test_rag_pipeline.TestRAGPipeline)
+Verify prompt builder formats system instructions and chunks correctly.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_retriever_in_domain (test_rag_pipeline.TestRAGPipeline)
+Verify that relevant mutual fund queries retrieve chunks above the similarity threshold.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_retriever_out_of_domain (test_rag_pipeline.TestRAGPipeline)
+Verify that unrelated/noisy queries are completely filtered out by the similarity threshold.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_rag_pipeline.py", line 26, in setUp
+    self.test_store.add_document_chunks(
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+======================================================================
+ERROR: test_purging_on_reindex (test_vector_store.TestVectorStore)
+Test that re-indexing a URL purges old chunks to prevent duplicates/orphans.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/RAG-Platform/RAG-Platform/tests/test_vector_store.py", line 65, in test_purging_on_reindex
+    self.store.add_document_chunks(url, scheme_name, title, chunks_v1)
+  File "/home/runner/work/RAG-Platform/RAG-Platform/src/data/vector_store.py", line 275, in add_document_chunks
+    self.collection.add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/models/Collection.py", line 118, in add
+    self._client._add(
+  File "/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/chromadb/api/rust.py", line 484, in _add
+    return self.bindings.add(
+chromadb.errors.InternalError: Query error: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+
+----------------------------------------------------------------------
+Ran 21 tests in 15.858s
+
+FAILED (errors=7)
