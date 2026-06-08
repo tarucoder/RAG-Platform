@@ -35,7 +35,9 @@ class TestRAGPipeline(unittest.TestCase):
         VectorStore._instance = self.test_store
         
         self.retriever = Retriever()
+        self.retriever.similarity_threshold = 0.30
         self.generator = Generator()
+        self.generator.retriever.similarity_threshold = 0.30
         
     def tearDown(self):
         # Restore original singleton
