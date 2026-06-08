@@ -99,7 +99,7 @@ class Crawler:
         
         try:
             logger.info(f"Crawling: {url}")
-            response = requests.get(url, headers=headers, timeout=15)
+            response = requests.get(url, headers=headers, timeout=5)
             response.raise_for_status()
             return response.text
         except requests.RequestException as e:
