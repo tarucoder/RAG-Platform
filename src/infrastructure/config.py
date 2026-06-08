@@ -42,7 +42,7 @@ class Config:
     
     # RAG Configurations
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
-    SIMILARITY_THRESHOLD: float = float(os.getenv("SIMILARITY_THRESHOLD", 0.30))
+    SIMILARITY_THRESHOLD: float = float(os.getenv("SIMILARITY_THRESHOLD", 0.15))
     TOP_K_CONTEXT: int = int(os.getenv("TOP_K_CONTEXT", 3))
     
     # Scheduler Configurations
