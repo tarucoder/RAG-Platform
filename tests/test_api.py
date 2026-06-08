@@ -12,6 +12,9 @@ import tempfile
 test_db_dir = Path(tempfile.mkdtemp())
 test_db_dir.mkdir(parents=True, exist_ok=True)
 
+# Save the original singleton BEFORE overriding so we can restore it after tests
+_original_vs_instance = VectorStore._instance
+
 # Initialize and set the global singleton instance before importing api/app
 test_store = VectorStore(persist_dir=str(test_db_dir))
 
@@ -35,6 +38,9 @@ class TestAPIGateway(unittest.TestCase):
     
     @classmethod
     def tearDownClass(cls):
+        # Restore the original VectorStore singleton to prevent poisoning production data
+        VectorStore._instance = _original_vs_instance
+        
         import shutil
         if test_db_dir.exists():
             shutil.rmtree(test_db_dir, ignore_errors=True)

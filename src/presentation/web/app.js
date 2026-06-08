@@ -52,8 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 // Successful answer
                 appendMessage("ai", data.answer, {
-                    source: data.source,
-                    lastUpdated: data.last_updated
+                    source: data.source
                 });
             } else {
                 // Error / PII block
@@ -111,22 +110,17 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Format time stamp or badge info
             let metaHtml = "";
-            if (meta.source || meta.lastUpdated) {
+            if (meta.source) {
                 metaHtml = `<div class="message-meta">`;
-                if (meta.lastUpdated) {
-                    metaHtml += `<span class="badge">Updated: ${meta.lastUpdated}</span>`;
-                }
-                if (meta.source) {
-                    metaHtml += `
-                        <a href="${meta.source}" target="_blank" rel="noopener" class="source-link">
-                            Official Document 
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="7" y1="17" x2="17" y2="7"></line>
-                                <polyline points="7 7 17 7 17 17"></polyline>
-                            </svg>
-                        </a>
-                    `;
-                }
+                metaHtml += `
+                    <a href="${meta.source}" target="_blank" rel="noopener" class="source-link">
+                        Official Document 
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                        </svg>
+                    </a>
+                `;
                 metaHtml += `</div>`;
             }
 

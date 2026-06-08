@@ -183,14 +183,18 @@ st.title("📈 Groww Mutual Fund FAQ Assistant")
 st.write("Ask questions about NAVs, exit loads, risk ratings, and parameters of Groww Mutual Funds.")
 
 # 5. Initialize RAG Generator (Cached to prevent reload overhead)
-# Reset the VectorStore singleton to ensure clean initialization
-from src.data.vector_store import VectorStore
-VectorStore._instance = None
+# NOTE: Do NOT reset VectorStore._instance here — it causes data loss if tests
+# have poisoned the singleton, and forces re-initialization which can lose data.
 
 @st.cache_resource
 def get_generator():
+    from src.data.vector_store import VectorStore
     from src.RAG.generator import Generator
+    
+    # Ensure we always start from a fresh singleton pointing at the production DB
+    VectorStore._instance = None
     gen = Generator()
+    
     # Log diagnostic info
     vs = gen.retriever.vector_store
     chunk_count = len(vs.collection.data) if hasattr(vs.collection, 'data') else 'unknown'
@@ -235,8 +239,6 @@ for msg in st.session_state.messages:
         )
     elif msg["role"] == "ai":
         badge_html = ""
-        if "last_updated" in msg:
-            badge_html += f'<span class="meta-badge">Updated: {msg["last_updated"]}</span>'
         if "source" in msg:
             badge_html += f'<a href="{msg["source"]}" target="_blank" rel="noopener" class="source-link">🔗 Official Document</a>'
             
@@ -285,7 +287,6 @@ if user_query:
                     
                     answer = response.get("answer", "I don't have that information.")
                     source = response.get("source", "https://groww.in")
-                    last_updated = response.get("last_updated", "01 Jun '26")
                     
                     # Convert markdown links to HTML links for cleaner streamlit display
                     formatted_answer = re.sub(
@@ -294,8 +295,7 @@ if user_query:
                         answer
                     )
                     
-                    badge_html = f'<span class="meta-badge">Updated: {last_updated}</span>'
-                    badge_html += f'<a href="{source}" target="_blank" rel="noopener" class="source-link">🔗 Official Document</a>'
+                    badge_html = f'<a href="{source}" target="_blank" rel="noopener" class="source-link">🔗 Official Document</a>'
                     
                     st.markdown(
                         f'<div class="ai-bubble">🤖 <b>Assistant:</b><br>{formatted_answer}<br>{badge_html}</div>',
@@ -305,8 +305,7 @@ if user_query:
                     st.session_state.messages.append({
                         "role": "ai",
                         "content": formatted_answer,
-                        "source": source,
-                        "last_updated": last_updated
+                        "source": source
                     })
                 except Exception as e:
                     st.error(f"Error generating response: {e}")

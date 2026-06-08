@@ -229,7 +229,6 @@
                     <p class="font-body-md text-body-md text-on-surface">Hello! I am your Groww Mutual Fund Assistant. I can provide factual information about exit loads, AUM, and fund managers directly from official scheme documents. How can I help you today?</p>
                 </div>
                 <div class="mt-2 flex items-center gap-2">
-                    <span class="font-label-md text-label-md text-on-surface-variant bg-surface-variant/50 px-2 py-1 rounded">Updated: 01 Jun '26</span>
                     <a class="font-label-md text-label-md text-primary flex items-center gap-1 hover:underline" href="https://www.sebi.gov.in" target="_blank" rel="noopener">
                         <span class="material-symbols-outlined text-[14px]" data-icon="link">link</span> Official Document
                     </a>
@@ -404,8 +403,7 @@
                     let metadataHtml = '';
                     if (metadata.source) {
                         metadataHtml = `
-                            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-medium opacity-60">
-                                <span class="bg-white/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Updated: ${metadata.last_updated || '01 Jun \'26'}</span>
+                            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-end text-[11px] font-medium opacity-60">
                                 <a href="${metadata.source}" target="_blank" rel="noopener" class="flex items-center gap-1 hover:text-primary transition-colors">
                                     Official Document <span class="material-symbols-outlined text-[14px]">open_in_new</span>
                                 </a>

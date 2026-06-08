@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from src.infrastructure.config import Config
 from src.infrastructure.logger import logger
 from src.RAG.retriever import Retriever
@@ -144,7 +145,7 @@ class Generator:
             return {
                 "answer": refusal_text,
                 "source": "https://www.sebi.gov.in",
-                "last_updated": "01 Jun '26"
+                "last_updated": datetime.now().strftime("%d %b '%y")
             }
             
         # Step 3: Construct prompts
@@ -181,5 +182,5 @@ class Generator:
         return {
             "answer": sanitized_answer,
             "source": source_url,
-            "last_updated": "01 Jun '26"
+            "last_updated": datetime.now().strftime("%d %b '%y")
         }
