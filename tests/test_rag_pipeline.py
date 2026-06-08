@@ -14,8 +14,9 @@ class TestRAGPipeline(unittest.TestCase):
     """Unit tests for RAG Pipeline components (Retriever, PromptEngine, Generator)."""
     
     def setUp(self):
-        # Create a test-specific temporary DB folder to isolate tests
-        self.test_dir = Path(__file__).resolve().parent.parent / "data" / "test_rag_pipeline_db"
+        import tempfile
+        # Create a test-specific temporary DB folder using tempfile to avoid SQLite locks
+        self.test_dir = Path(tempfile.mkdtemp())
         self.test_dir.mkdir(parents=True, exist_ok=True)
         
         # Instantiate isolated test VectorStore

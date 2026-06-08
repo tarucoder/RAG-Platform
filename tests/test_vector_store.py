@@ -12,8 +12,9 @@ class TestVectorStore(unittest.TestCase):
     """Unit tests for the local persistent vector store client."""
     
     def setUp(self):
-        # Create a test-specific temporary DB folder inside the workspace data directory
-        self.test_db_dir = Path(__file__).resolve().parent.parent / "data" / "test_vector_db"
+        import tempfile
+        # Create a test-specific temporary DB folder inside a unique temp directory to avoid SQLite locks
+        self.test_db_dir = Path(tempfile.mkdtemp())
         self.test_db_dir.mkdir(parents=True, exist_ok=True)
         
         # Isolate singleton during test execution

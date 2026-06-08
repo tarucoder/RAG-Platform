@@ -7,8 +7,9 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from src.data.vector_store import VectorStore
 
-# Create a test-specific temporary DB folder to isolate tests
-test_db_dir = Path(__file__).resolve().parent.parent / "data" / "test_api_db"
+import tempfile
+# Create a test-specific temporary DB folder to isolate tests and avoid SQLite locks
+test_db_dir = Path(tempfile.mkdtemp())
 test_db_dir.mkdir(parents=True, exist_ok=True)
 
 # Initialize and set the global singleton instance before importing api/app
@@ -25,6 +26,7 @@ test_store.add_document_chunks(
 
 VectorStore._instance = test_store
 
+# pyrefly: ignore [missing-import]
 from fastapi.testclient import TestClient
 from src.presentation.api import app
 
