@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          python -m unittest discover tests
+          python -m unittest discover -v tests
 
       - name: Run Scheduler Ingestion (One-Off)
         run: |
