@@ -10,7 +10,25 @@ if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
 from src.infrastructure.logger import logger
-from src.presentation.api import detect_pii
+
+# Import detect_pii directly to avoid triggering api.py's module-level Generator() instantiation
+# which would lock the VectorStore singleton before Streamlit's cached version can initialize
+import re as _re_pii
+def detect_pii(text: str) -> bool:
+    """Scans query text to block sensitive PII (Aadhaar, PAN, Card, Phone, Email)."""
+    aadhaar_pattern = r'\b\d{4}[ -]?\d{4}[ -]?\d{4}\b'
+    pan_pattern = r'\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b'
+    phone_pattern = r'\b(?:\+91|91)?[6-9]\d{9}\b'
+    card_pattern = r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b'
+    email_pattern = r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b'
+    text_upper = text.upper()
+    return bool(
+        _re_pii.search(aadhaar_pattern, text) or
+        _re_pii.search(pan_pattern, text_upper) or
+        _re_pii.search(phone_pattern, text) or
+        _re_pii.search(card_pattern, text) or
+        _re_pii.search(email_pattern, text)
+    )
 
 # 1. Page Configuration
 st.set_page_config(
@@ -139,6 +157,24 @@ with st.sidebar:
     st.subheader("⏱️ Ingestion Schedule")
     st.success("Daily cron update executed via GitHub Actions workflow.")
     
+    # Diagnostic: Show vector store status
+    st.markdown("---")
+    st.subheader("🔍 System Diagnostics")
+    try:
+        from src.data.vector_store import VectorStore
+        vs = VectorStore.get_instance()
+        chunk_count = len(vs.collection.data) if hasattr(vs.collection, 'data') else 'N/A (ChromaDB)'
+        db_path = vs.persist_dir
+        has_api_key = bool(vs.__class__.__module__)  # placeholder
+        from src.infrastructure.config import Config
+        has_api_key = bool(Config.GROQ_API_KEY)
+        st.metric("Indexed Chunks", chunk_count)
+        st.caption(f"DB Path: `{db_path}`")
+        st.caption(f"Fallback Mode: `{vs.use_fallback}`")
+        st.caption(f"API Key Present: `{has_api_key}`")
+    except Exception as diag_e:
+        st.error(f"Diagnostics failed: {diag_e}")
+    
     st.markdown("---")
     st.caption("© 2026 Groww Assistant. Built for SEBI compliance.")
 
@@ -147,15 +183,24 @@ st.title("📈 Groww Mutual Fund FAQ Assistant")
 st.write("Ask questions about NAVs, exit loads, risk ratings, and parameters of Groww Mutual Funds.")
 
 # 5. Initialize RAG Generator (Cached to prevent reload overhead)
+# Reset the VectorStore singleton to ensure clean initialization
+from src.data.vector_store import VectorStore
+VectorStore._instance = None
+
 @st.cache_resource
 def get_generator():
     from src.RAG.generator import Generator
-    return Generator()
+    gen = Generator()
+    # Log diagnostic info
+    vs = gen.retriever.vector_store
+    chunk_count = len(vs.collection.data) if hasattr(vs.collection, 'data') else 'unknown'
+    logger.info(f"Streamlit Generator initialized. VectorStore has {chunk_count} chunks. Fallback={vs.use_fallback}. Mock={gen.use_mock}")
+    return gen
 
 try:
     generator = get_generator()
 except Exception as e:
-    st.error("Failed to load retrieval model. Make sure dependencies are installed.")
+    st.error(f"Failed to load retrieval model: {e}")
     logger.error(f"Streamlit Generator loading failure: {e}")
     generator = None
 
